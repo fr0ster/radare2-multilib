@@ -66,11 +66,11 @@ RUN DEBIAN_FRONTEND=noninteractive dpkg --add-architecture i386 && \
   git \
   bison flex xz-utils \
   pkg-config \
-  make \
+  make socat netcat pkg-config \
   gnupg2 \
   sudo python-pip  && \
   pip install --upgrade pip && \
-  pip install r2pipe=="$R2_PIPE_PY_VERSION" && pip install --upgrade pwntools && \
+  pip install r2pipe=="$R2_PIPE_PY_VERSION" && pip install --upgrade pwntools ropper ropgadget && \
   cd /mnt && \
   git clone -q --depth 1 https://github.com/radareorg/radare2.git && \
   cd radare2 && \
@@ -90,7 +90,7 @@ ENV HOME /home/r2
 
 # Setup r2pm
 RUN r2pm init && \
-  r2pm update && r2pm -i r2ghidra-dec && \
+  r2pm update && r2pm -i r2ghidra-dec  && \
   chown -R r2:r2 /home/r2/.config
 
 # Base command for container
