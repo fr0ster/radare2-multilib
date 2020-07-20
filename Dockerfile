@@ -32,23 +32,22 @@
 FROM debian:10
 
 # Label base
-LABEL r2docker latest
+LABEL luckycatalex/radare2-multilib latest
 
 # Radare version
 ARG R2_VERSION=master
+ARG R2_TAG=4.5.0
 # R2pipe python version
 ARG R2_PIPE_PY_VERSION=0.8.9
-# R2pipe node version
-ARG R2_PIPE_NPM_VERSION=2.3.2
 
 ENV R2_VERSION ${R2_VERSION}
+ENV R2_TAG ${R2_TAG}
 ENV R2_PIPE_PY_VERSION ${R2_PIPE_PY_VERSION}
-ENV R2_PIPE_NPM_VERSION ${R2_PIPE_NPM_VERSION}
 
 RUN echo -e "Building versions:\n\
-  R2_VERSION=$R2_VERSION\n\
-  R2_PIPE_PY_VERSION=${R2_PIPE_PY_VERSION}\n\
-  R2_PIPE_NPM_VERSION=${R2_PIPE_NPM_VERSION}"
+  R2_VERSION=${R2_VERSION}\n\
+  R2_TAG=${R2_TAG}\n\
+  R2_PIPE_PY_VERSION=${R2_PIPE_PY_VERSION}"
 
 # Build radare2 in a volume to minimize space used by build
 VOLUME ["/mnt"]
@@ -68,14 +67,14 @@ RUN DEBIAN_FRONTEND=noninteractive dpkg --add-architecture i386 && \
   pkg-config \
   make socat netcat pkg-config \
   gnupg2 \
+  wget \
   sudo python-pip  && \
   pip install --upgrade pip && \
   pip install r2pipe=="$R2_PIPE_PY_VERSION" && pip install --upgrade pwntools ropper ropgadget && \
   cd /mnt && \
-  git clone -q --depth 1 https://github.com/radareorg/radare2.git && \
+  git clone -q --depth 1 https://github.com/radareorg/radare2.git -b ${R2_TAG} && \
   cd radare2 && \
-  ./sys/install.sh && \
-  make install && \
+  ./sys/install.sh --install && \
   apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create non-root user
