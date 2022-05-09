@@ -29,16 +29,19 @@
 #
 
 # Using debian 9 as base image.
-FROM debian:10
+FROM debian:11
 
 # Label base
-LABEL luckycatalex/radare2-multilib latest
+# luckycatalex/radare2-multilib 5.6.8
+LABEL maintainer="Alex Kislitsa"
+LABEL image="luckycatalex/radare2-multilib"
+LABEL version="5.6.8"
 
 # Radare version
 ARG R2_VERSION=master
-ARG R2_TAG=4.5.0
+ARG R2_TAG=5.6.8
 # R2pipe python version
-ARG R2_PIPE_PY_VERSION=0.8.9
+ARG R2_PIPE_PY_VERSION=1.6.5
 
 ENV R2_VERSION ${R2_VERSION}
 ENV R2_TAG ${R2_TAG}
@@ -59,7 +62,7 @@ VOLUME ["/mnt"]
 # Cleanup
 RUN DEBIAN_FRONTEND=noninteractive dpkg --add-architecture i386 && \
   apt-get update && \
-  apt-get install -y \
+  apt-get install -y --no-install-recommends \
   curl \
   gcc-multilib g++-multilib gdb tmux cmake \
   git \
@@ -68,18 +71,18 @@ RUN DEBIAN_FRONTEND=noninteractive dpkg --add-architecture i386 && \
   make socat netcat pkg-config \
   gnupg2 \
   wget \
-  sudo python-pip  && \
-  pip install --upgrade pip && \
-  pip install r2pipe=="$R2_PIPE_PY_VERSION" && pip install --upgrade pwntools ropper ropgadget && \
-  cd /mnt && \
-  git clone -q --depth 1 https://github.com/radareorg/radare2.git -b ${R2_TAG} && \
-  cd radare2 && \
+  python3-pip python3-capstone pkg-config patch \
+  less grep unzip
+
+WORKDIR /mnt
+
+RUN git clone -q --depth 1 https://github.com/radareorg/radare2.git -b ${R2_TAG} && cd radare2 && \
+  git switch -c ${R2_TAG} && \
   ./sys/install.sh --install && \
   apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create non-root user
 RUN useradd -m r2 && \
-  adduser r2 sudo && \
   echo "r2:r2" | chpasswd
 
 # Initilise base user
@@ -88,9 +91,14 @@ WORKDIR /home/r2
 ENV HOME /home/r2
 
 # Setup r2pm
-RUN r2pm init && \
-  r2pm update && r2pm -i r2ghidra-dec  && \
-  chown -R r2:r2 /home/r2/.config
+RUN git config --global pull.rebase false && \
+  r2pm init && \
+  r2pm update && r2pm -i r2ghidra  && \
+  chown -R r2:r2 /home/r2/.config && \
+  pip install --upgrade pip==22.0.4 --no-warn-script-location && \
+  pip install r2pipe=="$R2_PIPE_PY_VERSION" && \
+  pip install --upgrade pwntools==4.8.0 ropper==1.13.6 ropgadget==6.7 --no-warn-script-location && \
+  echo "export PATH=~/.local/bin:$PATH" >> ${HOME}/.bashrc
 
 # Base command for container
 CMD ["/bin/bash"]
