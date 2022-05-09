@@ -32,10 +32,7 @@
 FROM debian:11
 
 # Label base
-# luckycatalex/radare2-multilib 5.6.8
 LABEL maintainer="Alex Kislitsa"
-LABEL image="luckycatalex/radare2-multilib"
-LABEL version="5.6.8"
 
 # Radare version
 ARG R2_VERSION=master
@@ -65,21 +62,11 @@ RUN DEBIAN_FRONTEND=noninteractive dpkg --add-architecture i386 && \
   apt-get install -y --no-install-recommends \
   curl \
   gcc-multilib g++-multilib gdb tmux cmake \
-  git \
-  bison flex xz-utils \
-  pkg-config \
+  git bison flex xz-utils pkg-config \
   make socat netcat pkg-config \
-  gnupg2 \
-  wget \
-  python3-pip python3-capstone pkg-config patch \
+  gnupg2 wget \
+  python-is-python3 python3-pip python3-capstone pkg-config patch \
   less grep unzip
-
-WORKDIR /mnt
-
-RUN git clone -q --depth 1 https://github.com/radareorg/radare2.git -b ${R2_TAG} && cd radare2 && \
-  git switch -c ${R2_TAG} && \
-  ./sys/install.sh --install && \
-  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Create non-root user
 RUN useradd -m r2 && \
@@ -90,15 +77,18 @@ USER r2
 WORKDIR /home/r2
 ENV HOME /home/r2
 
-# Setup r2pm
-RUN git config --global pull.rebase false && \
-  r2pm init && \
-  r2pm update && r2pm -i r2ghidra  && \
-  chown -R r2:r2 /home/r2/.config && \
+# Setup r2env, r2pm and pwn tools
+RUN \
+  echo "export GIT_PYTHON_REFRESH=quiet" >> ${HOME}/.bashrc && \
+  echo "export PATH=~/.local/bin:~/.r2env/versions/radare2\@${R2_TAG}/bin:$PATH" >> ${HOME}/.bashrc && \
+  export PATH=~/.local/bin/:~/.r2env/versions/radare2@${R2_TAG}/bin:$PATH && \
+  git config --global pull.rebase false && \
   pip install --upgrade pip==22.0.4 --no-warn-script-location && \
-  pip install r2pipe=="$R2_PIPE_PY_VERSION" && \
+  pip install r2pipe=="$R2_PIPE_PY_VERSION" --no-warn-script-location && \
   pip install --upgrade pwntools==4.8.0 ropper==1.13.6 ropgadget==6.7 --no-warn-script-location && \
-  echo "export PATH=~/.local/bin:$PATH" >> ${HOME}/.bashrc
+  pip install --upgrade r2env --no-warn-script-location && \
+  r2env init && r2env add radare2@${R2_TAG} && \
+  r2pm init && r2pm update && r2pm -ci r2ghidra
 
 # Base command for container
 CMD ["/bin/bash"]
