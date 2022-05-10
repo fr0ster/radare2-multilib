@@ -5,5 +5,4 @@ LABEL maintainer="Alex Kislitsa"
 
 # Setup r2pm
 RUN \
-  export PATH=/home/r2/.r2env/versions/radare2@5.6.8/bin:$PATH && r2pm init && \
   r2pm update && r2pm -ci r2ghidra
