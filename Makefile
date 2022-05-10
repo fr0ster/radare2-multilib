@@ -22,10 +22,10 @@ base-image: ## Build the base image
 base-image-nc: ## Build the base image without caching
 	sudo docker build --network=host --no-cache -t $(IMAGE_NAME)-base:$(VERSION) -f Dockerfile.base .
 
-r2ghidra-image: ## Build the base image
+ghidra-image: ## Build the r2ghidra image
 	sudo docker build --network=host -t $(IMAGE_NAME)-r2ghidra:$(VERSION) -f Dockerfile.r2ghidra .
 
-r2ghidra-image-nc: ## Build the base image without caching
+ghidra-image-nc: ## Build the r2ghidra image without caching
 	sudo docker build --network=host --no-cache -t $(IMAGE_NAME)-r2ghidra:$(VERSION) -f Dockerfile.r2ghidra .
 
 run-multilib: ## Run container from mulilib image
@@ -34,7 +34,7 @@ run-multilib: ## Run container from mulilib image
 run-ghidra: ## Run container from r2ghidra image
 	sudo docker run --network=host --rm -it $(IMAGE_NAME)-r2ghidra:$(VERSION) bash
 
-get-multilib: ## Get the latest Iaito image
+get-multilib: ## Get the latest multilib image
         sudo docker pull $(IMAGE_NAME)-multilib:$(VERSION)
 
 get-base: ## Get the latest radare2 base image
