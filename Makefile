@@ -1,20 +1,5 @@
 SHELL := /bin/bash
 
-# The directory of this file
-DIR := $(shell echo $(shell cd "$(shell  dirname "${BASH_SOURCE[0]}" )" && pwd ))
-
-
-# To mount a specific binary using BINARY=/absolute/path/to/binary
-ifdef BINARY
-    MOUNTFLAGS += -v $(BINARY):/home/r2/$(shell basename $(BINARY)):ro
-    RUNFLAGS += /home/r2/$(shell basename $(BINARY))
-endif
-
-VERSION ?= latest
-IMAGE_NAME ?= luckycatalex/radare2
-
-LOCAL_DEV ?= n
-
 # This will output the help for each task
 # thanks to https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 .PHONY: help
