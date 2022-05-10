@@ -19,9 +19,6 @@ RUN echo -e "Building versions:\n\
   R2_TAG=${R2_TAG}\n\
   R2_PIPE_PY_VERSION=${R2_PIPE_PY_VERSION}"
 
-# Build radare2 in a volume to minimize space used by build
-VOLUME ["/mnt"]
-
 # Install all build dependencies
 # Install bindings
 # Build and install radare2 on master branch
