@@ -106,4 +106,14 @@ RUN \
   angr \
   pebble \
   r2pipe \
-  pwntools --no-warn-script-location 
+  pwntools --no-warn-script-location
+
+COPY .gdbinit ${HOME}/.gdbinit
+
+RUN \
+  git clone https://github.com/matrix1001/heapinspect.git && \
+  git clone https://github.com/hugsy/gef.git && \
+  git clone https://github.com/longld/peda.git && \
+  git clone https://github.com/pwndbg/pwndbg.git
+
+RUN cd pwndbg && ./setup.sh
