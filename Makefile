@@ -47,14 +47,14 @@ run-ctf: ## Run container from CTF image
 	sudo docker run --network=host --rm -it $(IMAGE_NAME)-ctf:$(VERSION) bash
 
 get-multilib: ## Get the latest multilib image
-    sudo docker pull $(IMAGE_NAME)-multilib:$(VERSION)
+	sudo docker pull $(IMAGE_NAME)-multilib:$(VERSION)
 
 get-base: ## Get the latest radare2 base image
-    sudo docker pull $(IMAGE_NAME)-base:$(VERSION)
+	sudo docker pull $(IMAGE_NAME)-base:$(VERSION)
 
 get-ghidra: ## Get the latest r2ghidra image
-    sudo docker pull $(IMAGE_NAME)-r2ghidra:$(VERSION)
+	sudo docker pull $(IMAGE_NAME)-r2ghidra:$(VERSION)
 
 get-ctf: ## Get the latest CTF image
-    sudo docker pull $(IMAGE_NAME)-ctf:$(VERSION)
+	sudo docker pull $(IMAGE_NAME)-ctf:$(VERSION)
 
