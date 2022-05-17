@@ -3,10 +3,10 @@ FROM luckycatalex/radare2-base:5.6.8
 # Label base
 LABEL maintainer="Alex Kislitsa"
 
-# Initilise base user
-USER r2
-WORKDIR /home/r2
-ENV HOME /home/r2
+# # Initilise base user
+# USER r2
+# WORKDIR /home/r2
+# ENV HOME /home/r2
 
 # Setup r2pm
 RUN \
