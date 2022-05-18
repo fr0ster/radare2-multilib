@@ -108,12 +108,17 @@ RUN \
   r2pipe \
   pwntools --no-warn-script-location
 
-COPY .gdbinit ${HOME}/.gdbinit
-
 RUN \
   git clone https://github.com/matrix1001/heapinspect.git && \
   git clone https://github.com/hugsy/gef.git && \
   git clone https://github.com/longld/peda.git && \
   git clone https://github.com/pwndbg/pwndbg.git
 
+COPY .gdbinit ${HOME}/.gdbinit
+COPY .pwn.conf ${HOME}/.pwn.conf
+COPY .tmux.conf ${HOME}/.tmux.conf
+
 RUN cd pwndbg && ./setup.sh
+
+RUN gem install --user one_gadget && \
+    echo "PATH=${HOME}/.local/bin:$(find ~ -name one_gadget -exec dirname {} \; | tail -n 1):$PATH" >> $HOME/.bashrc
