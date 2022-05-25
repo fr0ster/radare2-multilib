@@ -81,18 +81,11 @@ ENV HOME /home/r2
 # Setup r2env, r2pm and pwn tools
 RUN \
   echo "export GIT_PYTHON_REFRESH=quiet" >> ${HOME}/.bashrc && \
-  echo "export PATH=~/.local/bin:~/.r2env/bin:$PATH" >> ${HOME}/.bashrc && \
   git config --global pull.rebase false && \
-  # pip install --upgrade pip==22.0.4 --no-warn-script-location && \
-  # pip install r2pipe=="$R2_PIPE_PY_VERSION" --no-warn-script-location && \
-  # pip install --upgrade pwntools==4.8.0 ropper==1.13.6 ropgadget==6.7 --no-warn-script-location && \
   pip install --upgrade r2env --no-warn-script-location && \
   ${HOME}/.local/bin/r2env init && \
   ${HOME}/.local/bin/r2env add radare2@${R2_TAG} && \
-  ${HOME}/.local/bin/r2env use radare2@${R2_TAG}
-
-
-RUN \
+  ${HOME}/.local/bin/r2env use radare2@${R2_TAG} && \
   python3 -m pip install -U pip && \
   python3 -m pip install --no-cache-dir \
   ropgadget \
@@ -106,9 +99,7 @@ RUN \
   angr \
   pebble \
   r2pipe \
-  pwntools --no-warn-script-location
-
-RUN \
+  pwntools --no-warn-script-location && \
   git clone https://github.com/matrix1001/heapinspect.git && \
   git clone https://github.com/hugsy/gef.git && \
   git clone https://github.com/longld/peda.git && \
@@ -118,7 +109,6 @@ COPY .gdbinit ${HOME}/.gdbinit
 COPY .pwn.conf ${HOME}/.pwn.conf
 COPY .tmux.conf ${HOME}/.tmux.conf
 
-RUN cd pwndbg && ./setup.sh
-
-RUN gem install --user one_gadget && \
-    echo "PATH=${HOME}/.local/bin:$(find ~ -name one_gadget -exec dirname {} \; | tail -n 1):$PATH" >> $HOME/.bashrc
+RUN cd pwndbg && ./setup.sh && \
+  gem install --user one_gadget && \
+  echo "PATH=${HOME}/.local/bin:${HOME}/.r2env/bin:$(find ~ -name one_gadget -exec dirname {} \; | tail -n 1):$PATH" >> $HOME/.bashrc
