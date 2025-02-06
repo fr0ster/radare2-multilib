@@ -1,4 +1,4 @@
-VERSION ?= 5.6.8
+VERSION ?= 5.9.8
 IMAGE_NAME ?= luckycatalex/radare2
 
 # This will output the help for each task

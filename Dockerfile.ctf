@@ -1,4 +1,4 @@
-FROM luckycatalex/radare2-r2ghidra:5.6.8
+FROM luckycatalex/radare2-r2ghidra:5.9.8
 
 # Label base
 LABEL maintainer="Alex Kislitsa"

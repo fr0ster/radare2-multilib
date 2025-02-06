@@ -7,7 +7,7 @@ Old image kind of "all-in-one" type
 
 ### Usage
 ```
-docker run --network=host --rm -v $(pwd):/work_dir -it luckycatalex/radare2-multilib:5.6.8  bash
+docker run --network=host --rm -v $(pwd):/work_dir -it luckycatalex/radare2-multilib:5.9.8  bash
 ```
 
 ## radare2-base
@@ -15,7 +15,7 @@ The base image that will be used from other images, you can use him
 
 ### Usage
 ```
-docker run --network=host --rm -v $(pwd):/work_dir -it luckycatalex/radare2-base:5.6.8  bash
+docker run --network=host --rm -v $(pwd):/work_dir -it luckycatalex/radare2-base:5.9.8  bash
 ```
 
 ### included software
@@ -39,7 +39,7 @@ Based on radare2-base and have installed r2ghidra plugin by default
 
 ### Usage
 ```
-docker run --network=host --rm -v $(pwd):/work_dir -it luckycatalex/radare2-r2ghidra:5.6.8  bash
+docker run --network=host --rm -v $(pwd):/work_dir -it luckycatalex/radare2-r2ghidra:5.9.8  bash
 ```
 
 ## radare2-ctf
@@ -48,7 +48,7 @@ Based on radare2-r2ghidra
 
 ### Usage
 ```
-docker run --network=host --rm -v $(pwd):/work_dir -it luckycatalex/radare2-ctf:5.6.8  bash
+docker run --network=host --rm -v $(pwd):/work_dir -it luckycatalex/radare2-ctf:5.9.8  bash
 ```
 
 ### included glibc
